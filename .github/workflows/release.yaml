@@ -24,9 +24,9 @@ jobs:
           key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
         if: runner.os != 'Windows'
       
-      - name: Build and test with nimble
-        uses: jiro4989/setup-nim-action@v1
-        run: nimble build -Y ; nimble test -Y
+      - uses: jiro4989/setup-nim-action@v1
+      - run: nimble build -Y
+      - run: nimble test -Y
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
