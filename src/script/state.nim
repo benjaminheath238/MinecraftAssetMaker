@@ -12,7 +12,7 @@ type State* = ref object
 proc interpolate*(this: State, text: string): string =
   result = text
   for (k, v) in this.strings.pairs():
-    result = result.replace("$" & k, v)
+    result = result.replace("${" & k & "}", v)
 
 proc addString*(this: State, key: string, value: string): void = this.strings[key] = value
 proc getString*(this: State, key: string): string = this.strings[key]
