@@ -1,11 +1,10 @@
 import scripting
 
 from std/tables import newTable
-from std/os import getCurrentDir
+from std/os import getCurrentDir, dirExists, splitPath, createDir
 from std/strformat import fmt
 from pkg/stb_image/read import load, RGBA
 from pkg/stb_image/write import writePNG, RGBA
-
 
 proc `+/`(a, b: byte): byte =
   let sum: uint16 = uint16(a) + uint16(b)
@@ -14,7 +13,6 @@ proc `+/`(a, b: byte): byte =
     result = 255
   else:
     result = byte(sum shr 1)
-
 
 when isMainModule:
   let engine: ScriptEngine = newScriptEngine()
@@ -85,6 +83,10 @@ when isMainModule:
       let image: Image = state.getImage(args[0])
       let path: string = state.interpolate(args[1])
 
+      let dir: string = splitPath(path).head
+      if not dirExists(dir):
+        createDir(dir)
+
       if writePNG(path, image.width, image.height, RGBA, image.bytes):
         return (success: true, message: fmt"Saved image {args[0]} to {path}")
       else:
@@ -125,13 +127,8 @@ when isMainModule:
           bytes[index + 1] = lg
           bytes[index + 2] = lb
           bytes[index + 3] = la
-        else:
-          bytes[index + 0] = br
-          bytes[index + 1] = bg
-          bytes[index + 2] = bb
-          bytes[index + 3] = ba
 
-        index = index + 4
+        index += 4
 
     state.addImage(args[0], (width: base.width, height: base.height, channels: base.channels, bytes: bytes, transparent: false))
 
