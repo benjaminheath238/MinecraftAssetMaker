@@ -9,9 +9,9 @@ type State* = ref object
   imports: TableRef[string, Import]
   images: TableRef[string, Image]
 
-static const NIL_STRING = ""
-static const NIL_IMPORT = (path: "", file: nil)
-static const NIL_IMAGE = (width: 0, height: 0, channels: 0, bytes: newSeq(0), transparent: false)
+const NIL_STRING: string = ""
+const NIL_IMPORT: Import = (path: "", file: nil)
+const NIL_IMAGE: Image = (width: 0, height: 0, channels: 0, bytes: newSeq(0), transparent: false)
 
 proc close*(this: Import) =
   if not this.file == nil:
