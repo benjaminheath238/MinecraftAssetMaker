@@ -2,10 +2,8 @@ name: Release
 
 on:
   push:
-    paths-ignore:
-      - 'LICENSE'
-      - '*.md'
-      - 'README'
+    paths:
+      - "src/"
 
 jobs:
   build:
@@ -35,11 +33,11 @@ jobs:
         with:
           name: Minecraft Asset Maker - ${{ matrix.os }} Binary
           path: MinecraftAssetMaker
-        if: ${{ runner.os }} != 'Windows'
+        if: runner.os != 'Windows'
 
       - name: Upload artifacts - Windows
         uses: actions/upload-artifact@v3
         with:
           name: Minecraft Asset Maker - ${{ matrix.os }} Binary
           path: MinecraftAssetMaker.exe
-        if: ${{ runner.os }} == 'Windows'
+        if: runner.os == 'Windows'
