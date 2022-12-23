@@ -2,10 +2,10 @@ name: Release
 
 on:
   push:
-    paths:
-      - "./.github/"
-      - "./src/"
-      - "./*.nimble"
+    paths-ignore:
+      - "README.md"
+      - "*.md"
+      - "LICENSE.md"
 
 jobs:
   build:
