@@ -17,6 +17,16 @@ proc `+/`(a, b: byte): byte =
 when isMainModule:
   let engine: ScriptEngine = newScriptEngine()
   
+  engine.register("SECTION"):
+    state.rmImports()
+    state.rmImages()
+    
+    if args.len() < 1:
+      return (success: true, message: "Entered section")
+    else:
+      return (success: true, message: fmt"Entered section {args[1]}")
+    
+  
   engine.register("SET"):
     if args.len() < 2:
       return (success: false, message: "Not enough parameters for SET <key> <value>")
