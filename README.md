@@ -23,6 +23,8 @@ Variables can be set using `SET <name> <value>` this is useful to reduce repetit
 
 The variable `home` represents the directory the binary was executed from.
 
+Sections can be created to separate loaded textures and imports by using `SECTION <name>` 
+
 ### Texture creation
 
 1. Import the files using `IMPORT <name> <path>`
@@ -56,3 +58,14 @@ COMPOSE b_steel_plate_dark bb_steel lb_noise_dark lb_plate
 SAVE b_steel_plate_light ${o_dir}/b_steel_plate_light.png
 SAVE b_steel_plate_dark ${o_dir}/b_steel_plate_dark.png
 ```
+
+In the above example the following happens;
+
+1. The variable `modid` is set to `example_mod`
+2. The directories for reading and writing files are set
+3. A section called `blocks` is made
+4. The files `lb_plate`, `lb_noise_dark`, `lb_noise_light` and `bb_steel` are imported
+5. The files are loaded as textures
+6. The two textures `b_steel_plate_light` and `b_steel_plate_dark` are composed
+7. The texture from set 6 are saved
+
