@@ -1,4 +1,4 @@
-[![Test](https://github.com/benjaminheath238/MinecraftAssetMaker/actions/workflows/test.yaml/badge.svg)](https://github.com/benjaminheath238/MinecraftAssetMaker/actions/workflows/test.yaml)
+[![Release](https://github.com/benjaminheath238/MinecraftAssetMaker/actions/workflows/release.yaml/badge.svg)](https://github.com/benjaminheath238/MinecraftAssetMaker/actions/workflows/release.yaml)
 
 # Minecraft Asset Maker
 
