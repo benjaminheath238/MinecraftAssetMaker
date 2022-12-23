@@ -12,7 +12,7 @@ Minecraft asset maker is a tool to create the large number of json files and tex
 
 ## Setup
 
-1. Dowload binary from latest (here)[https://github.com/benjaminheath238/MinecraftAssetMaker/releases/latest]
+1. Dowload binary from latest [here](https://github.com/benjaminheath238/MinecraftAssetMaker/releases/latest)
 2. Create file `config.mcam`
 3. Setup script
 4. Execute binary
