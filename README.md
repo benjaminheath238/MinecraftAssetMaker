@@ -4,6 +4,19 @@
 
 Minecraft asset maker is a tool to create the large number of json files and textures that are used in minecraft mod development.
 
+## Installation
+
+1. Dowload binary from latest [here](https://github.com/benjaminheath238/MinecraftAssetMaker/releases/latest)
+
+### Building from source
+
+1. Download source code
+2. Download [nim >= 1.6.8](https://nim-lang.org/install.html) and nimble
+3. Enter source code directory
+4. In a shell enter `nimble build`
+5. Wait for compilation
+6. Use file called `MinecraftAssetMaker` or `MinecraftAssetMaker.exe` on Linux or Windows respectively
+
 ## Features
 
 * [x] Create textures
@@ -14,10 +27,9 @@ Minecraft asset maker is a tool to create the large number of json files and tex
 
 ## Setup
 
-1. Dowload binary from latest [here](https://github.com/benjaminheath238/MinecraftAssetMaker/releases/latest)
-2. Create file `config.mcam`
-3. Setup script
-4. Execute binary
+1. Create file `config.mcam`
+2. Setup script
+3. Execute binary
 
 ## How to use
 
