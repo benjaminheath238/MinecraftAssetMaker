@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     paths:
-      - "./github/"
+      - "./.github/"
       - "./src/"
       - "./*.nimble"
 
