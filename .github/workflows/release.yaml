@@ -2,22 +2,27 @@ name: Release
 
 on:
   push:
-    paths-ignore:
-      - "README.md"
-      - "*.md"
-      - "LICENSE.md"
+    branches:
+      - master
+    tags:
+      - v*
 
 jobs:
   build:
+    name: Build
+    
     runs-on: ${{ matrix.os }}
+    
     strategy:
       matrix:
         os:
           - ubuntu-latest
           - windows-latest
+
     steps:
       - name: Checkout code  
         uses: actions/checkout@v3
+
       - name: Cache nimble
         id: nimble-cache
         uses: actions/cache@v1
@@ -26,20 +31,80 @@ jobs:
           key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
         if: runner.os != 'Windows'
       
-      - uses: jiro4989/setup-nim-action@v1
-      - run: nimble build -Y
-      - run: nimble test -Y
+      - name: Set up nimble
+        uses: jiro4989/setup-nim-action@v1
       
-      - name: Upload artifacts - Unix
+      - name: Build
+        run: nimble build -Y
+      
+      - name: Test
+        run: nimble test -Y
+      
+      - name: Upload artifacts - Linux
         uses: actions/upload-artifact@v3
         with:
-          name: Minecraft Asset Maker - ${{ matrix.os }} Binary
+          name: Minecraft Asset Maker - Linux Binary
           path: MinecraftAssetMaker
         if: runner.os != 'Windows'
 
       - name: Upload artifacts - Windows
         uses: actions/upload-artifact@v3
         with:
-          name: Minecraft Asset Maker - ${{ matrix.os }} Binary
+          name: Minecraft Asset Maker - Windows Binary
           path: MinecraftAssetMaker.exe
         if: runner.os == 'Windows'
+  
+  release:
+    name: Release
+    
+    needs:
+      - build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+      
+      - name: Download artifacts - Linux
+        uses: actions/download-artifact@v3
+        with:
+          name: Minecraft Asset Maker - Linux Binary
+          path: assets/MinecraftAssetMaker
+
+      - name: Upload Release Assets - Linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: assets/MinecraftAssetMaker
+          asset_name: MinecraftAssetMaker - Linux
+          asset_content_type: application/zip
+
+      - name: Download artifacts - Windows
+        uses: actions/download-artifact@v3
+        with:
+          name: Minecraft Asset Maker - Windows Binary
+          path: assets/MinecraftAssetMaker.exe
+
+      - name: Upload Release Assets - Windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: assets/MinecraftAssetMaker.exe
+          asset_name: MinecraftAssetMaker - Windows
+          asset_content_type: application/zip

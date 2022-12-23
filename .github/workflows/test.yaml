@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout code  
+        uses: actions/checkout@v3
+
+      - name: Cache nimble
+        id: nimble-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.nimble
+          key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
+        if: runner.os != 'Windows'
+      
+      - name: Set up nimble
+        uses: jiro4989/setup-nim-action@v1
+      
+      - name: Build
+        run: nimble build -Y
+      
+      - name: Test
+        run: nimble test -Y
