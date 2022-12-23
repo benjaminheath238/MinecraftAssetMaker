@@ -2,11 +2,9 @@ name: Test
 
 on:
   push:
-    branches:
-      - master
     paths:
-      - src/**
-      - MinecraftAssetMaker.nimble
+      - "src/**"
+      - "MinecraftAssetMaker.nimble"
 
 jobs:
   build:
