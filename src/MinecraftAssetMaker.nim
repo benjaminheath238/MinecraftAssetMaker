@@ -55,7 +55,10 @@ when isMainModule:
       return (success: false, message: "Not enough parameters for CLOSE <image>")
   
     try:
-      state.getImport(args[0]).file.close()
+      if not state.hasImport(args[0]):
+        return (success: false, message: fmt"Could find import to close {args[0]}")
+
+      state.getImport(args[0]).close()
       state.delImport(args[0])
 
       return (success: true, message: fmt"Closed image {args[0]}")
@@ -67,6 +70,9 @@ when isMainModule:
       return (success: false, message: "Not enough parameters for OPEN <image> <transparent|opaque>")
 
     try:
+      if not state.hasImport(args[0]):
+        return (success: false, message: fmt"Could find image to open {args[0]}")
+
       let imprt: Import = state.getImport(args[0])
 
       var w, h, c: int
@@ -90,6 +96,9 @@ when isMainModule:
       return (success: false, message: "Not enough parameters for SAVE <image> <path>")
 
     try:
+      if not state.hasImage(args[0]):
+        return (success: false, message: fmt"Could find image to save {args[0]}")
+
       let image: Image = state.getImage(args[0])
       let path: string = state.interpolate(args[1])
 
@@ -108,10 +117,16 @@ when isMainModule:
     if args.len() < 3:
       return (success: false, message: "Not enough parameters for COMPOSE <out> <base> <layer*>")
 
+    if not state.hasImage(args[1]):
+      return (success: false, message: fmt"Could find image to compose {args[1]}")
+
     let base: Image = state.getImage(args[1])
     var bytes: seq[byte] = base.bytes #newSeq[byte](base.width * base.height * 4)
     
     for name in args[2..high(args)]:
+      if not state.hasImage(name):
+        continue
+
       let layer: Image = state.getImage(name)
 
       var index: int = 0

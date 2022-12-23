@@ -1,5 +1,5 @@
 # Package
-version       = "1.1.1"
+version       = "1.1.2"
 author        = "Benjamin Heath"
 description   = "A tool to create textures and other assets for minecraft"
 license       = "MIT"
