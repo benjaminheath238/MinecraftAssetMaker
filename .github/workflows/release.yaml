@@ -3,8 +3,9 @@ name: Release
 on:
   push:
     paths:
-      - "src/"
-      - "*.nimble"
+      - "./github/"
+      - "./src/"
+      - "./*.nimble"
 
 jobs:
   build:
