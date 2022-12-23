@@ -142,12 +142,15 @@ when isMainModule:
         let lb: byte = layer.bytes[index + 2]
         let la: byte = layer.bytes[index + 3]
 
-        if layer.transparent and la > 0:  
+        if not la > 0:
+          continue
+
+        if layer.transparent:
           bytes[index + 0] = br +/ lr
           bytes[index + 1] = bg +/ lg
           bytes[index + 2] = bb +/ lb
           bytes[index + 3] = ba +/ la
-        elif la > 0:
+        else:
           bytes[index + 0] = lr
           bytes[index + 1] = lg
           bytes[index + 2] = lb
