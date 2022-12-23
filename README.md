@@ -21,9 +21,38 @@ Minecraft asset maker is a tool to create the large number of json files and tex
 
 Variables can be set using `SET <name> <value>` this is useful to reduce repetition caused errors. The value of a variable can be accessed by using `${name}`.
 
+The variable `home` represents the directory the binary was executed from.
+
 ### Texture creation
 
 1. Import the files using `IMPORT <name> <path>`
 2. Open the textures using `OPEN <name> <transparent|opaque>`
 3. Create the file texture using `COMPOSE <name> <layers>`, where `<layers>` represent the names of textures opened in step 2
 4. Save the created texture using `SAVE <name> <path>`
+
+### Example
+
+```
+SET modid example_mod
+
+SET i_dir ${home}/assets/i
+SET o_dir ${home}/assets/o
+
+SECTION blocks
+
+IMPORT lb_plate ${i_dir}/lb_plate.png
+IMPORT lb_noise_dark ${i_dir}/lb_noise_dark.png
+IMPORT lb_noise_light ${i_dir}/lb_noise_light.png
+IMPORT bb_steel ${i_dir}/bb_steel.png
+
+OPEN lb_plate transparent
+OPEN lb_noise_dark transparent
+OPEN lb_noise_light transparent
+OPEN bb_steel opaque
+
+COMPOSE b_steel_plate_light bb_steel lb_noise_light lb_plate
+COMPOSE b_steel_plate_dark bb_steel lb_noise_dark lb_plate
+
+SAVE b_steel_plate_light ${o_dir}/b_steel_plate_light.png
+SAVE b_steel_plate_dark ${o_dir}/b_steel_plate_dark.png
+```
