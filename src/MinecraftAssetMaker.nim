@@ -24,7 +24,7 @@ when isMainModule:
     if args.len() < 1:
       return (success: true, message: "Entered section")
     else:
-      return (success: true, message: fmt"Entered section {args[1]}")
+      return (success: true, message: fmt"Entered section {args[0]}")
     
   
   engine.register("SET"):
