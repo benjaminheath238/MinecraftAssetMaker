@@ -1,9 +1,10 @@
+from program import Program
+from state import State
+
 from std/sugar import `=>`, `->`
 from std/tables import TableRef, newTable, `[]`, `[]=`, contains, pairs, `$`, del
 from std/terminal import styledWriteLine, fgRed, fgGreen, resetAttributes
 from std/strformat import fmt
-from program import Program
-from state import State
 
 type Result* = tuple[success: bool, message: string]
 type Function* = (args: seq[string], state: State) -> Result 

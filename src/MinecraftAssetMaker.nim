@@ -1,6 +1,7 @@
 import scripting
 
 from schema import nil
+
 from std/tables import newTable
 from std/os import getCurrentDir
 

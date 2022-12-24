@@ -1,5 +1,5 @@
 from std/strutils import strip, split, isEmptyOrWhitespace, replace
-from std/sequtils import filter
+from std/sequtils import filter, map
 from std/sugar import `=>`, `->`
 
 type Command* = tuple[name: string, args: seq[string], line: int]
@@ -26,7 +26,8 @@ proc parse(line: tuple[text: string, number: int]): Command =
   let words: seq[string] = line.text
       .strip()
       .split(" ")
-      .filter(x => not x.isEmptyOrWhitespace())
+      .map(x => x.strip())
+      .filter(x => not x.isEmptyOrWhitespace() or x[0] != '#')
 
   return (name: words[0], args: words[1..words.len() - 1], line: line.number)
 

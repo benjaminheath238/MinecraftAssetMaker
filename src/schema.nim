@@ -8,6 +8,7 @@ from pkg/stb_image/write import writePNG, RGBA
 # Helper functions
 
 proc `+/`(a, b: byte): byte =
+  ## Add bytes, a and b, with clamping
   let sum: uint16 = uint16(a) + uint16(b)
 
   if sum >= 510:
@@ -83,7 +84,6 @@ proc popen*(args, state): Result =
     let imprt: Import = state.getImport(args[0])
     
     var w, h, c: int
-    
     let bytes: seq[byte] = load(imprt.path, w, h, c, RGBA)
     
     var tr: bool
@@ -125,18 +125,18 @@ proc psave*(args, state): Result =
 
 proc pcompose*(args, state): Result =
   if args.len() < 3:
-    return failure("Not enough parameters for COMPOSE <out> <base> <layer*>")
+    return failure("Not enough parameters for COMPOSE <out> <base> <layer>*")
   
   if not state.hasImage(args[1]):
-  
     return failure(fmt"Could find image to compose {args[1]}")
-  let base: Image = state.getImage(args[1])
-  var bytes: seq[byte] = base.bytes #newSeq[byte](base.width * base.height * 4)
   
+  let base: Image = state.getImage(args[1])
+  var bytes: seq[byte] = base.bytes
+
   for name in args[2..high(args)]:
     if not state.hasImage(name):
       continue
-    
+
     let layer: Image = state.getImage(name)
     var index: int = 0
     
@@ -151,9 +151,12 @@ proc pcompose*(args, state): Result =
       let lb: byte = layer.bytes[index + 2]
       let la: byte = layer.bytes[index + 3]
       
-      if not la > 0:
+      
+      if la == 0:
+        index += 4
         continue
-      elif layer.transparent:
+      
+      if layer.transparent:
         bytes[index + 0] = br +/ lr
         bytes[index + 1] = bg +/ lg
         bytes[index + 2] = bb +/ lb
@@ -163,9 +166,9 @@ proc pcompose*(args, state): Result =
         bytes[index + 1] = lg
         bytes[index + 2] = lb
         bytes[index + 3] = la
-      
+
       index += 4
-  
+
   state.addImage(args[0], (width: base.width, height: base.height, channels: base.channels, bytes: bytes, transparent: false))
-  
+
   return success(fmt"Composed {args[0]}")
