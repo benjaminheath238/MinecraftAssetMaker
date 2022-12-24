@@ -1,5 +1,4 @@
 [![Release](https://github.com/benjaminheath238/MinecraftAssetMaker/actions/workflows/release.yaml/badge.svg)](https://github.com/benjaminheath238/MinecraftAssetMaker/actions/workflows/release.yaml)
-
 # Minecraft Asset Maker
 
 Minecraft asset maker is a tool to create the large number of json files and textures that are used in minecraft mod development.
