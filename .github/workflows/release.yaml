@@ -64,17 +64,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-      
       - name: Download artifacts - Linux
         uses: actions/download-artifact@v3
         with:

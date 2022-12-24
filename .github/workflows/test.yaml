@@ -3,9 +3,8 @@ name: Test
 on:
   push:
     paths:
-      - ".gitignore"
-      #- "src/**"
-      #- "MinecraftAssetMaker.nimble"
+      - "src/**"
+      - "MinecraftAssetMaker.nimble"
 
 jobs:
   build:
