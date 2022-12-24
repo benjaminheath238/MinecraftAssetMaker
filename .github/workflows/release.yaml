@@ -80,11 +80,6 @@ jobs:
         with:
           name: Minecraft Asset Maker - Linux Binary
 
-      - name: Download artifacts - Windows
-        uses: actions/download-artifact@v3
-        with:
-          name: Minecraft Asset Maker - Windows Binary
-
       - run: ls
 
       - name: Upload release assets
