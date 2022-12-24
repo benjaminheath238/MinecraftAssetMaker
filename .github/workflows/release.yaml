@@ -15,7 +15,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - windows-latest
+          #- windows-latest
 
     steps:
       - name: Checkout code  
@@ -84,6 +84,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Minecraft Asset Maker - Windows Binary
+
+      - run: ls
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v1
