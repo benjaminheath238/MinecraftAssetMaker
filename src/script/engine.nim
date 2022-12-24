@@ -1,4 +1,4 @@
-from program import Program
+from program import Program, Command, call, next, finished
 from state import State
 
 from std/sugar import `=>`, `->`
@@ -7,7 +7,7 @@ from std/terminal import styledWriteLine, fgRed, fgGreen, resetAttributes
 from std/strformat import fmt
 
 type Result* = tuple[success: bool, message: string]
-type Function* = (args: seq[string], state: State) -> Result 
+type Function* = (args: seq[string], state: State) -> Result
 type ScriptEngine* = ref object
   functions: TableRef[string, Function]
   program: Program
@@ -23,14 +23,23 @@ proc load*(this: ScriptEngine, program: Program): void = this.program = program
 proc uses*(this: ScriptEngine, state: State): void = this.state = state
 
 proc execute*(this: ScriptEngine): void =
-  for command in this.program.commands:
+  if this.functions == nil or this.program == nil or this.state == nil:
+    return
+
+  var command: Command
+  var result: Result
+  while not this.program.finished():
+    command = this.program.call()
+
     if this.functions.contains(command.name):
-      let result = this.functions[command.name](command.args, this.state)
+      result = this.functions[command.name](command.args, this.state)
 
       if result.success:
         stdout.styledWriteLine(fgGreen, fmt"[SUCCESS]-[LINE={command.line}]: {result.message}")
       else:
         stdout.styledWriteLine(fgRed, fmt"[FAILURE]-[LINE={command.line}]: {result.message}")
+      
+      this.program.next()
 
   stdout.resetAttributes()
 
