@@ -16,8 +16,8 @@ proc `+/`(a, b: byte): byte =
   else:
     result = byte(sum shr 1)
 
-proc failure(msg: string): Result = (success: false, message: msg)
-proc success(msg: string): Result = (success: true, message: msg)
+template failure(msg: string): void = return (success: false, message: msg)
+template success(msg: string): void = return (success: true, message: msg)
 
 # Actual schema
 
@@ -29,57 +29,57 @@ proc psection*(args, state): Result =
   state.rmImages()
   
   if args.len() < 1:
-    return success("Entered section")
+    success("Entered section")
   else:
-    return success(fmt"Entered section {args[0]}")
+    success(fmt"Entered section {args[0]}")
 
 proc pset*(args, state): Result =
   if args.len() < 2:
-    return failure("Not enough parameters for SET <key> <value>")
+    failure("Not enough parameters for SET <key> <value>")
   
   let value: string = state.interpolate(args[1])
 
   state.addString(args[0], value)
 
-  return success(fmt"Set {args[0]} to {value}")
+  success(fmt"Set {args[0]} to {value}")
 
 proc pimport*(args, state): Result =
   if args.len() < 2:
-    return failure("Not enough parameters for IMPORT <name> <path>")
+    failure("Not enough parameters for IMPORT <name> <path>")
 
   try:
     let path: string = state.interpolate(args[1])
   
     state.addImport(args[0], (path: path, file: open(path)))
   
-    return success(fmt"Imported {args[0]} from {path}")
+    success(fmt"Imported {args[0]} from {path}")
   
   except IOError:
-    return failure("Could not open import")
+    failure("Could not open import")
   
 proc pclose*(args, state): Result =
   if args.len() < 1:
-    return failure("Not enough parameters for CLOSE <image>")
+    failure("Not enough parameters for CLOSE <image>")
 
   try:
     if not state.hasImport(args[0]):
-      return failure(fmt"Could find import to close {args[0]}")
+      failure(fmt"Could find import to close {args[0]}")
     
     state.getImport(args[0]).close()
     state.delImport(args[0])
     
-    return success(fmt"Closed image {args[0]}")
+    success(fmt"Closed image {args[0]}")
   
   except IOError:
-    return failure("Could not close image")
+    failure("Could not close image")
 
 proc popen*(args, state): Result =
   if args.len() < 2:
-    return failure("Not enough parameters for OPEN <image> <transparent|opaque>")
+    failure("Not enough parameters for OPEN <image> <transparent|opaque>")
   
   try:
     if not state.hasImport(args[0]):
-      return failure(fmt"Could find image to open {args[0]}")
+      failure(fmt"Could find image to open {args[0]}")
     
     let imprt: Import = state.getImport(args[0])
     
@@ -95,18 +95,18 @@ proc popen*(args, state): Result =
     
     state.addImage(args[0], (width: w, height: h, channels: c, bytes: bytes, transparent: tr))
     
-    return success(fmt"Opened image {args[0]}")
+    success(fmt"Opened image {args[0]}")
   
   except IOError:
-    return failure("Could not open image")
+    failure("Could not open image")
 
 proc psave*(args, state): Result =
   if args.len() < 2:
-    return failure("Not enough parameters for SAVE <image> <path>")
+    failure("Not enough parameters for SAVE <image> <path>")
   
   try:
     if not state.hasImage(args[0]):
-      return failure(fmt"Could find image to save {args[0]}")
+      failure(fmt"Could find image to save {args[0]}")
     
     let image: Image = state.getImage(args[0])
     let path: string = state.interpolate(args[1])
@@ -116,19 +116,19 @@ proc psave*(args, state): Result =
       createDir(dir)
     
     if writePNG(path, image.width, image.height, RGBA, image.bytes):
-      return success(fmt"Saved image {args[0]} to {path}")
+      success(fmt"Saved image {args[0]} to {path}")
     else:
-      return failure(fmt"Could not save image {args[0]}")
+      failure(fmt"Could not save image {args[0]}")
   
   except IOError:
-    return failure("Could not save image")
+    failure("Could not save image")
 
 proc pcompose*(args, state): Result =
   if args.len() < 3:
-    return failure("Not enough parameters for COMPOSE <out> <base> <layer>*")
+    failure("Not enough parameters for COMPOSE <out> <base> <layer>*")
   
   if not state.hasImage(args[1]):
-    return failure(fmt"Could find image to compose {args[1]}")
+    failure(fmt"Could find image to compose {args[1]}")
   
   let base: Image = state.getImage(args[1])
   var bytes: seq[byte] = base.bytes
@@ -171,4 +171,4 @@ proc pcompose*(args, state): Result =
 
   state.addImage(args[0], (width: base.width, height: base.height, channels: base.channels, bytes: bytes, transparent: false))
 
-  return success(fmt"Composed {args[0]}")
+  success(fmt"Composed {args[0]}")
