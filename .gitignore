@@ -1,5 +1,8 @@
 config.mcam
 final/
 proto/
+
 MinecraftAssetMaker
+
 .metals
+.vscode
