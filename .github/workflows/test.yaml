@@ -17,19 +17,20 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-
+        include:
+          - nim-version: 'devel'
+            cache-key: 'devel'
+    
     steps:
       - name: Checkout code  
         uses: actions/checkout@v3
 
       - name: Cache nimble
-        id: nimble-cache
         uses: actions/cache@v1
         with:
           path: ~/.nimble
           key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
-        if: runner.os != 'Windows'
-      
+
       - name: Set up nimble
         uses: jiro4989/setup-nim-action@v1
       
