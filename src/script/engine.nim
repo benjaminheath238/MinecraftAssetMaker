@@ -12,6 +12,9 @@ type ScriptEngine* = ref object
   program: Program
   state: State
 
+proc `[]=`*(this: ScriptEngine, name: string, function: Function): void =
+  this.functions[name] = function
+
 template register*(this: ScriptEngine, name: string, code: untyped): void =
   this.functions[name] = (args, state) => code
 
